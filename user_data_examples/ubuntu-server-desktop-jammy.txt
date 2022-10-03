@@ -1,0 +1,29 @@
+#!/bin/bash
+
+DEBIAN_FRONTEND=noninteractive
+apt-get update && apt-get upgrade -y
+apt-get install -y ubuntu-desktop^
+apt-get install -y xrdp
+
+usermod -a -G ssl-cert xrdp
+systemctl restart xrdp
+
+#  make sure TCP port 3389 is open and accessible
+
+#create a script in /usr/local/bin/ubuntu-session
+cat > /usr/local/bin/ubuntu-session <<- "EOF"
+#!/bin/sh
+ 
+export GNOME_SHELL_SESSION_MODE=ubuntu
+export DESKTOP_SESSION=ubuntu-xorg
+export XDG_SESSION_DESKTOP=ubuntu-xorg
+export XDG_CURRENT_DESKTOP=ubuntu:GNOME
+ 
+exec /usr/bin/gnome-session --session=ubuntu
+EOF
+
+chmod +x /usr/local/bin/ubuntu-session
+update-alternatives --install /usr/bin/x-session-manager x-session-manager /usr/local/bin/ubuntu-session 60
+
+# Finally setting up a passwd for the ubuntu user (bad practice to add passwds here)
+echo -e "my_password\nmy_password\n" | passwd ubuntu
