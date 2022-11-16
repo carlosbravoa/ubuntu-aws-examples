@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu20-04-fips
+  labels: 
+    app: eksfips
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: eksfips
+  template:
+    metadata:
+      labels:
+        app: eksfips
+    spec:
+      containers:
+      - name: ubuntu20-04-fips
+        image: carlosbravo1/ubuntu20.04-fips:latest
+        ports:
+        - containerPort: 80

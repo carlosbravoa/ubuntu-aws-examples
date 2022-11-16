@@ -1,0 +1,7 @@
+# ua-attach-config.yaml
+
+token: YOUR_TOKEN_HERE
+enable_services:
+  - esm-infra
+  - esm-apps
+  - fips
