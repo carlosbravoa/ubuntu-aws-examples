@@ -1,0 +1,42 @@
+# Download base image ubuntu 20.04
+FROM ubuntu:20.04
+
+# LABEL about the custom image
+LABEL maintainer="carlos.bravo@canonical.com"
+LABEL version="0.1"
+LABEL description="This is custom Docker Image for a FIPS container on Ubuntu 20.04. Do not use on production"
+
+# Disable Prompt During Packages Installation
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Attach UA Token, update and upgrade
+RUN --mount=type=secret,id=ua-attach-config \
+    apt-get update \
+    # install the UA client
+    && apt-get install --no-install-recommends -y \
+       ubuntu-advantage-tools ca-certificates \
+    # attach a UA subscription
+    && ua attach --attach-config /run/secrets/ua-attach-config \
+    # upgrade packages
+    && apt-get upgrade -y
+
+# Manually installing apache2 and php modules
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apache2 php libapache2-mod-php
+
+# Detach token, remove UA client and clean repos
+RUN ua detach --assume-yes && \
+apt-get purge --auto-remove -y \
+ubuntu-advantage-tools && \
+rm -rf /var/lib/apt/lists/*
+
+
+# Removing index and copying index.php from our local files
+RUN rm /var/www/html/index.html
+COPY ./index.php /var/www/html/
+EXPOSE 80
+
+# Starting apache manually for the demo
+CMD /usr/sbin/apache2ctl -D FOREGROUND
+
+# Build with
+# DOCKER_BUILDKIT=1 docker build . --secret id=ua-attach-config,src=ua-attach-config.yaml -t my-fips20.04-container

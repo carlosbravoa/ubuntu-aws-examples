@@ -1,0 +1,36 @@
+---
+schemaVersion: '2.2'
+description: "Enable Pro services using token"
+parameters:
+  token:
+    type: String
+  reboot:
+    type: String
+    allowedValues:
+    - "False"
+    - "True"
+mainSteps:
+- action: aws:runShellScript
+  name: update
+  inputs:
+    runCommand:
+    - "sudo apt-get update && sudo apt-get upgrade -y"
+- action: aws:runShellScript
+  name: attachToken
+  inputs:
+    runCommand:
+    - "sudo ua attach {{ token }}"
+- action: aws:runShellScript
+  name: updateWithESM
+  inputs:
+    runCommand:
+    - "sudo apt-get update && sudo apt-get upgrade -y"
+- action: aws:runShellScript
+  name: reboot
+  precondition:
+    StringEquals:
+    - "{{ reboot }}"
+    - "True"
+  inputs:
+    runCommand:
+    - "sudo reboot"
