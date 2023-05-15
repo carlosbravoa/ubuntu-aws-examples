@@ -44,8 +44,7 @@
       {
         "type": "shell",
         "inline": [
-          "sudo truncate -s 0 /etc/machine-id",
-          "sudo truncate -s 0 /var/lib/dbus/machine-id"
+          "sudo cloud-init clean --machine-id"
         ]
       }
     ]
