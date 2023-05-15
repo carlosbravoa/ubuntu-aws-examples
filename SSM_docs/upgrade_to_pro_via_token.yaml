@@ -1,6 +1,6 @@
 ---
 schemaVersion: '2.2'
-description: "Enable Pro services using token"
+description: "Upgrade to Ubuntu Pro using a Pro token"
 parameters:
   token:
     type: String
