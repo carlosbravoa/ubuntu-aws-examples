@@ -98,7 +98,7 @@ This utility is licensed under the [MIT License](LICENSE).
 
 ## Disclaimer
 
-- Do not run this code before understanding its logic and testing it with a few instances first. Currently, upgrading to Ubuntu Pro cannot be done via self-service, and AWS support is required.
+- Do not run this code before understanding its logic and testing it with a few instances first. Currently, downgrading from Ubuntu Pro cannot be done via self-service, and AWS support is required.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
