@@ -1,0 +1,44 @@
+{
+    "variables": {
+        "aws_access_key": "YOUR_IAM_ACCESS_KEY",
+        "aws_secret_key": "YOUR_IAM_SECRET_KEY",
+        "eks_ver": "1.29"
+    },
+     "builders": [
+      {
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "region": "us-east-1",
+        "instance_type": "t2.micro",
+        "ami_name": "eks{{user `eks_ver`}}-fips-ubuntu22.04-{{timestamp}}",
+        "source_ami_filter": {
+            "filters": {
+                "virtualization-type": "hvm",
+                "name": "ubuntu-eks-pro/k8s_{{user `eks_ver`}}/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*",
+                "root-device-type": "ebs"
+            },
+        "owners": ["099720109477"],
+        "most_recent": true
+      },
+      "ssh_username": "ubuntu"
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "inline": [
+          "cloud-init status --wait",
+          "sudo apt-get update && sudo apt-get upgrade -y --with-new-pkgs",
+          "sudo pro enable fips-updates --assume-yes"
+        ]
+      },
+      {
+        "type": "shell",
+        "inline": [
+            "sudo rm -rf /var/log/ubuntu-advantage.log",
+            "sudo cloud-init clean --machine-id"
+        ]
+      }
+    ]
+}
