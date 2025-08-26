@@ -2,7 +2,7 @@
     "variables": {
         "aws_access_key": "YOUR_IAM_ACCESS_KEY",
         "aws_secret_key": "YOUR_IAM_SECRET_KEY",
-        "eks_ver": "1.29"
+      "eks_ver": "1.33"
     },
      "builders": [
       {
@@ -27,6 +27,9 @@
     "provisioners": [
       {
         "type": "shell",
+        "environment_vars": [
+            "DEBIAN_FRONTEND=noninteractive"
+      ],
         "inline": [
           "cloud-init status --wait",
           "sudo apt-get update && sudo apt-get upgrade -y --with-new-pkgs",
